@@ -19,6 +19,12 @@ execute "mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.conf.disabl
   notifies :restart, "service[httpd]"
 end
 
+apache_vhost "lions" do
+  site_port 8080
+  action :create
+  notifies :restart, "service[httpd]"
+end
+
 # Iterate over the apache sites
 node["apache"]["sites"].each do |site_name, site_data|
 # Set the document root
