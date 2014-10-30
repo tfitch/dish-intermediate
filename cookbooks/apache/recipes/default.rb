@@ -7,11 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-package "httpd" do
+package 'httpd' do
   action :install
 end
 
-ruby_block "randomly_choose_language" do
+ruby_block 'randomly_choose_language' do
   block do
     if Random.rand > 0.5
       node.run_state['scripting_language'] = 'php'
@@ -21,25 +21,25 @@ ruby_block "randomly_choose_language" do
   end
 end
 
-package "scripting_language" do
+package 'scripting_language' do
   package_name lazy { node.run_state['scripting_language'] }
   action :install
 end
 
 # Disable the default virtual host
-apache_vhost "welcome" do
+apache_vhost 'welcome' do
   action :remove
-  notifies :restart, "service[httpd]"
+  notifies :restart, 'service[httpd]'
 end
 
-search("apache_sites", "*:*").each do |site|
+search('apache_sites', '*:*').each do |site|
   apache_vhost site['id'] do
     site_port site['port']
     action :create
-    notifies :restart, "service[httpd]"
+    notifies :restart, 'service[httpd]'
   end
 end
 
-service "httpd" do
-  action [ :enable, :start ]
+service 'httpd' do
+  action [:enable, :start]
 end
